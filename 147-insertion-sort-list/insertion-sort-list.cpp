@@ -1,38 +1,39 @@
 class Solution {
 public:
     ListNode* insertionSortList(ListNode* head) {
-        ListNode revHead(std::numeric_limits<int>::max(), nullptr);
-
-        // Inserting nodes one by one into a *reverse-sorted* list
-        ListNode* insert = head;
-        while (insert != nullptr) {
-            int val = insert->val;
-            ListNode* insertBehind = &revHead;
-            while (insertBehind->next != nullptr && insertBehind->next->val > val) {
-                insertBehind = insertBehind->next;
+        ListNode* newHead = NULL;//initializing the newHead for our sorted linkedlist
+        while(head){
+            // Exluding node from the original linked list we will do this one at a time
+            ListNode* temp = head;
+            head = head->next;
+            temp->next=NULL;
+            
+            //setting the first node of our final linked list 
+            if(newHead == NULL) newHead = temp;
+             // if the position of element is at index 0 i.e. at the start (the temp node is the smallest of all the nodes that are currently present in the sorted linked list)
+            else if(newHead->val >= temp->val){
+                temp->next = newHead;
+                newHead = temp;
             }
-
-            ListNode* nextInsert = insert->next;
-            insert->next = insertBehind->next;
-            insertBehind->next = insert;
-            insert = nextInsert;
-        }
-
-        // Reversing the reverse-sorted list
-        ListNode* prev = nullptr;
-        ListNode* curr = revHead.next;
-        while (true) {
-            ListNode* next = curr->next;
-            if (next == nullptr) {
-                curr->next = prev;
-                return curr; // This is the actual termination point of the function
-            } else {
-                curr->next = prev;
-                prev = curr;
-                curr = next;
+            // inserting the node anywhere in the middle or in the end depending upon the value of the temp node;
+            else{
+                ListNode* root = newHead;
+                {
+                while(root->next){
+                    if(temp->val > root->val and temp->val <= root->next->val){
+                        temp->next = root->next;
+                        root->next = temp;
+                        break;
+                    }
+                    root = root->next;
+                }  
+                    //inserting the temp node at the end
+                    if(root->next==NULL) root->next = temp;
+                    
+                }
             }
         }
-
-        return nullptr; // This should never happen
+        //Our sorted linkedlist
+        return newHead;
     }
 };
