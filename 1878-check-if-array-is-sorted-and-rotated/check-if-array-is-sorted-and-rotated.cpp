@@ -1,16 +1,8 @@
 class Solution {
 public:
     bool check(vector<int>& nums) {
-       int count=0;
-       int n = nums.size();
-       for(int i=1;i<n;i++){
-           if(nums[i-1]>nums[i]){
-               count++;
-           }
-       }
-       if(nums[n-1]>nums[0]){
-           count++;
-       } 
-       return count<=1;
+        int cntD=count_if(nums.begin(), nums.end(), [&,i=-1](int x) mutable{
+            return ++i==0?0:x<nums[i-1];});
+        return (nums[0]>=nums.back() && cntD==1) || cntD==0;
     }
 };
